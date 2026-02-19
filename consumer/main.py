@@ -2,12 +2,15 @@ import connection_mongo as mongo
 from connection_redis import consumer
 from redis import Redis
 from datetime import datetime
+import json
 
 def pop_from_queues(consumer:Redis):
     while True:
-        data = consumer.brpop(["urgent_queue"])
+        queue,data = consumer.blpop(["urgent_queue"])
         if not data:
-            data = consumer.blpop(["normal_queue"])
+            queue, data = consumer.blpop(["normal_queue"])
+        
+        data = json.loads(data).encode()
         data['insertion_time'] = datetime.now()
         
         insert_to_mongo(data)
