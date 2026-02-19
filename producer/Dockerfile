@@ -1,9 +1,9 @@
 FROM python:3.13-slim 
 
-COPY requirements.txt . 
+COPY ./producer/requirements.txt . 
 
 RUN pip install --no-cache-dir -r requirements.txt 
 
-COPY . .
-
+COPY ./producer .
+COPY ./data .
 CMD ["python","main.py"]
