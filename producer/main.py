@@ -5,6 +5,5 @@ def main():
     data = get_data_from_file()
     sorting_alerts(data)
     insert_to_queue(data, producer)
-
 if __name__=="__main__":
     main()
