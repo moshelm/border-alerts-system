@@ -5,14 +5,12 @@ from datetime import datetime
 import json
 
 def pop_from_queues(consumer:Redis):
+    queues = ["urgent_queue","normal_queue"]
+    num =0 
     while True:
-        queue,data = consumer.blpop(["urgent_queue"])
-        if not data:
-            queue, data = consumer.blpop(["normal_queue"])
-        
-        data = json.loads(data).encode()
-        data['insertion_time'] = datetime.now()
-        
+        queue, data = consumer.blpop(["urgent_queue","normal_queue"])    
+        data = json.loads(data)
+        data['insertion_time'] = datetime.now().astimezone()
         insert_to_mongo(data)
 
 def insert_to_mongo(data:dict):
