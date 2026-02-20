@@ -14,15 +14,16 @@ def get_data_from_file():
         data = json.load(file)
     return data
 
+
 def insert_to_queue(data:list[dict], producer:Redis):
     try:
         for alert in data:    
-            alert = json.dumps(alert).encode()
-
-            if alert['priority'] == 'URGENT':
-                producer.lpush("urgent_queue",alert)
-            elif alert['priority'] == 'NORMAL':
-                producer.lpush("normal_queue:1",alert)
+            priority = alert['priority']
+            alert_json = json.dumps(alert)
+            if priority == 'URGENT':
+                producer.lpush("urgent_queue",alert_json)
+            elif priority == 'NORMAL':
+                producer.lpush("normal_queue",alert_json)
             
     except Exception as e:
         print(f' failed insertion to queue {e}')
