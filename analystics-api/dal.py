@@ -20,10 +20,34 @@ def alerts_border():
             {"$sort":{"urgent_only_count": -1}}]        
     result = list(coll.aggregate(query))
     return  result
+
 def urgent_zones():
-    query = [{"$group":{"_id":"$zone","total":{"$sum":{"$priority":'URGENT'}}},
-             },{"$sort":"total"},{"$limit":5}]
-    res = coll.aggregate(query)
+    query = [
+        {
+            "$match":{"priority":"URGENT"}
+        }
+        ,
+        {
+            "$group":{
+                "_id":"$zone", "total_urgent_alerts": {"$sum":-1}
+            }
+        },
+        {
+            "$project":{
+                "_id":1,
+                "zone":"$_id",
+                "total_urgent_alerts":1}
+        },
+        {
+            "$sort":{"total_urgent_alerts":1}
+        },
+        {
+            "$limit":5
+        }
+
+    ]
+    
+    res = list(coll.aggregate(query))
     return res
 
 def distance():
