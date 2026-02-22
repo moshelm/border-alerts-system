@@ -51,10 +51,33 @@ def urgent_zones():
     return res
 
 def distance():
-    query = [{"$group":{"_id":"$"},
-             "$count":{""}}]
-    res = coll.aggregate(query)
+    query = [
+        {
+            "$facet":{
+                "closer":[
+                    {
+                        "$match":{"distance_from_fence_m":{"$gte":1,"$lte":300}}
+                     },
+                     {"$count":"total"}
+                ],
+                "medium":[
+                    {
+                        "$match":{"distance_from_fence_m":{"$gte":301,"$lte":800}}
+                     },
+                     {"$count":"total"}
+                ],
+                "far":[
+                    {
+                        "$match":{"distance_from_fence_m":{"$gte":801,"$lte":1500}}
+                     },
+                     {"$count":"total"}
+                ],
+            }
+        }
+    ]
+    res = list(coll.aggregate(query))
     return res
+
 def visibility_activity():
     query = [{"$group":{"_id":"$"},
              "$count":{""}}]
