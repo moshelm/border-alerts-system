@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from dal import *
 from redis_connection import manager
+import json
 router = APIRouter()
 
 def data_to_fastapi(data:list):
@@ -11,8 +12,9 @@ def data_to_fastapi(data:list):
 def alerts_by_border():
     data = manager.get("alerts-by-border-and-priority")
     if data is None:
-        data = alerts_border
-        manager.setex("id_result",10,data)
+        data = alerts_border()
+        data_to_redis = json.dumps(data)
+        manager.setex("alerts-by-border-and-priority",10,data_to_redis)
     data_to_fastapi(data)
     return data
 
