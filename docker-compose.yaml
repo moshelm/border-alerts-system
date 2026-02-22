@@ -22,4 +22,30 @@ services:
     redis:
      condition: 
       service_started
+  producer:
+    build: ./producer
+    container_name: producer 
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    depends_on:
+      mongo:
+        condition: service_started
+      redis:
+        condition: 
+          service_started
+  consumer: 
+    build: ./consumer
+    container_name: consumer 
+    
+    env_file:
+     - .env
+    depends_on:
+      mongo:
+        condition: service_started
+      redis:
+        condition: 
+          service_started
+
   
