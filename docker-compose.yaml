@@ -10,7 +10,7 @@ services:
    ports: 
     - "27018:27017"
   api-analytics:
-   build: ./analytics-api 
+   build: ./analystics-api 
    container_name: api 
    ports:
     - "8000:8000"
