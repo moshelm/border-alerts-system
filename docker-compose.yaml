@@ -3,7 +3,7 @@ services:
    image: redis
    container_name: redis
    ports:
-    - "6379:6379"
+    - "6378:6379"
   mongo:
    container_name: mongo 
    ports: 
