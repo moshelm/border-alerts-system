@@ -11,7 +11,10 @@ def data_to_fastapi(data:list):
 @router.get("/analytics/alerts-by-border-and-priority")
 def alerts_by_border():
     data = manager.get("alerts-by-border-and-priority")
-    if data is None:
+    if data: 
+        data = json.loads(data)
+        status = "from redis"
+    elif data is None:
         data = alerts_border()
         data_to_redis = json.dumps(data)
         manager.setex("alerts-by-border-and-priority",10,data_to_redis)
